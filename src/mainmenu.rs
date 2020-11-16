@@ -7,6 +7,7 @@ use amethyst::ui::{
 use amethyst::prelude::{Builder, GameData, SimpleState, SimpleTrans, StateData};
 use amethyst::StateEvent;
 
+const TEMP_LOGO: &str = "Bitcoin miner";
 
 const BUTTON_NEW: &str = "new game";
 const BUTTON_LOAD: &str = "load game";
@@ -15,6 +16,7 @@ const BUTTON_QUIT: &str = "quit";
 
 #[derive(Default)]
 pub struct MainMenuState {
+    game_logo: Option<Entity>,
     button_new: Option<Entity>,
     button_load: Option<Entity>,
     button_options: Option<Entity>,
@@ -25,10 +27,13 @@ impl SimpleState for MainMenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
 
-        self.button_new = initialise_button(0, BUTTON_NEW, world);
-        self.button_load = initialise_button(1, BUTTON_LOAD, world);
-        self.button_options = initialise_button(2, BUTTON_OPTIONS,  world);
-        self.button_quit = initialise_button(3, BUTTON_QUIT, world);
+        //temporary logo using font
+        self.game_logo = initialise_ui_element(-3, TEMP_LOGO, world);
+
+        self.button_new = initialise_ui_element(0, BUTTON_NEW, world);
+        self.button_load = initialise_ui_element(1, BUTTON_LOAD, world);
+        self.button_options = initialise_ui_element(2, BUTTON_OPTIONS,  world);
+        self.button_quit = initialise_ui_element(3, BUTTON_QUIT, world);
     }
     //fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
     //    Trans::None
@@ -55,9 +60,10 @@ impl SimpleState for MainMenuState {
     }
 }
 
-fn initialise_button(index: i32, label: &str, world: &mut World) -> Option<Entity> {
+fn initialise_ui_element(index: i32, label: &str, world: &mut World) -> Option<Entity> {
 
     let mut color = [1.0f32, 1.0f32, 1.0f32, 0.5f32];
+    let font_size = if label == TEMP_LOGO{ 30.0 } else { 25.0 }; 
 
     if label == BUTTON_QUIT {
         color = [1.0f32, 0.3f32, 0.3f32, 0.5f32];
@@ -76,27 +82,27 @@ fn initialise_button(index: i32, label: &str, world: &mut World) -> Option<Entit
         Anchor::Middle,                // anchor
         Anchor::Middle,                // pivot
         0f32,                          // x
-        ((index * -30) + 60) as f32,   // y
+        ((index * -30) + 0) as f32,   // y
         0f32,                          // z
-        200f32,                        // width
-        30f32,                         // height
+        400f32,                        // width
+        35f32,                         // height
         );
     /* Create the text */
     let ui_text = UiText::new(
         font_handle,                      // font
-        String::from(label),    // text
+        String::from(label),                    // text
         color, // color
-        25f32,                            // font_size
+        font_size,                            // font_size
         LineMode::Single,                 // line_mode
         Anchor::Middle,                   // align
         );
 
     /* Building the entity */
-    let btn = world.create_entity()
+    let ui = world.create_entity()
         .with(ui_transform)
         .with(ui_text)
         .with(Interactable)   
         .build();
-
-    return Some(btn);
+ 
+    return Some(ui);
 }
