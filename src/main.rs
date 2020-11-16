@@ -3,7 +3,7 @@ use crate::mainmenu::MainMenuState;
 //use crate::systems::UiEventHandlerSystem;
 mod events;
 use amethyst::{
-    core::{transform::Transform, timing::Time, TransformBundle,},
+    core::TransformBundle,
     prelude::*,
     renderer::{
         plugins::{RenderToWindow},
@@ -32,7 +32,6 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with_bundle(UiBundle::<StringBindings>::new())?
-        //.with_system_desc(UiEventHandlerSystem::default(), "ui_event_handler", &[])
         .with_system_desc(crate::events::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
