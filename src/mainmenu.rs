@@ -1,6 +1,6 @@
 
 use amethyst::assets::{Loader};
-use amethyst::ecs::{Entity, World, WorldExt, Component, DenseVecStorage};
+use amethyst::ecs::{Entity, World, WorldExt};
 use amethyst::ui::{
     Anchor, LineMode, UiText, UiTransform, UiEventType, Interactable,TtfFormat,
 };
@@ -23,19 +23,10 @@ pub struct MainMenuState {
     button_quit: Option<Entity>,
 }
 
-pub struct Button {
-    pub text_color: [f32;4],
-    pub label: String,
-}
-impl Component for Button {
-    type Storage = DenseVecStorage<Self>;
-}
-
 impl SimpleState for MainMenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
 
-        //temporary logo using font
         self.game_logo = initialise_ui_element(-3, TEMP_LOGO, world);
 
         self.button_new = initialise_ui_element(0, BUTTON_NEW, world);
@@ -43,9 +34,7 @@ impl SimpleState for MainMenuState {
         self.button_options = initialise_ui_element(2, BUTTON_OPTIONS,  world);
         self.button_quit = initialise_ui_element(3, BUTTON_QUIT, world);
     }
-    //fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
-    //    Trans::None
-    //}
+
     fn handle_event(
         &mut self,
     	_data: StateData<'_, GameData<'_, '_>>,
@@ -68,14 +57,16 @@ impl SimpleState for MainMenuState {
     }
 }
 
-fn initialise_ui_element(index: i32, label: &str, world: &mut World) -> Option<Entity> {
+fn initialise_ui_element(position: i32, label: &str, world: &mut World) -> Option<Entity> {
 
-    let mut color = [1.0f32, 1.0f32, 1.0f32, 0.5f32];
+    let color = if label == BUTTON_QUIT 
+    {
+        [1.0f32, 0.3f32, 0.3f32, 0.5f32]
+    }   else {
+        [1.0f32, 1.0f32, 1.0f32, 0.5f32]
+    };
+
     let font_size = if label == TEMP_LOGO{ 30.0 } else { 25.0 }; 
-
-    if label == BUTTON_QUIT {
-        color = [1.0f32, 0.3f32, 0.3f32, 0.5f32];
-    }
 
     let font_handle = world.read_resource::<Loader>().load(
         "font/square.ttf",
@@ -90,7 +81,7 @@ fn initialise_ui_element(index: i32, label: &str, world: &mut World) -> Option<E
         Anchor::Middle,                // anchor
         Anchor::Middle,                // pivot
         0f32,                          // x
-        ((index * -30) + 0) as f32,   // y
+        ((position * -30) ) as f32,   // y
         0f32,                          // z
         400f32,                        // width
         35f32,                         // height

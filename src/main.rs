@@ -1,6 +1,6 @@
 mod mainmenu;
 use crate::mainmenu::MainMenuState;
-mod events;
+mod menuevents;
 
 use amethyst::{
     core::TransformBundle,
@@ -31,7 +31,7 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with_bundle(UiBundle::<StringBindings>::new())?
-        .with_system_desc(crate::events::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
+        .with_system_desc(crate::menuevents::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?
