@@ -1,0 +1,46 @@
+(
+    mainmenu: [
+        (
+            label: "new game",
+            position: 0,
+        ),
+        (
+            label: "load game",
+            position: 1,
+        ),
+        (
+            label: "options",
+            position: 2,
+            submenu: [
+                (
+                    label: "game settings",
+                    position: 0,
+                ),
+                (
+                    label: "display",
+                    position: 0,
+                ),
+                (
+                    label: "sounds",
+                    position: 0,
+                ),
+                (
+                    label: "controls",
+                    position: 0,
+                ),
+                (
+                    label: "back",
+                    position: 0,
+                ),
+            ]
+        ),
+        (
+            label: "credits",
+            position: 2,
+        ),
+        (
+            label: "quit",
+            position: 3,
+        ),
+    ]
+)
