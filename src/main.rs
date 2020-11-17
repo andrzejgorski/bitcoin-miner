@@ -1,7 +1,7 @@
 mod mainmenu;
 use crate::mainmenu::MainMenuState;
-//use crate::systems::UiEventHandlerSystem;
 mod events;
+
 use amethyst::{
     core::TransformBundle,
     prelude::*,
@@ -14,14 +14,16 @@ use amethyst::{
     utils::application_root_dir,
     ui::{RenderUi, UiBundle},
     input::{InputBundle, StringBindings},
+    config::Config,
 };
+use amethyst::window::ScreenDimensions;
+
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
     
     let app_root = application_root_dir()?;
     let display_config_path = app_root.join("config").join("display.ron");
-
     let assets_dir = app_root.join("assets/");
 
     let binding_path = app_root.join("config").join("bindings.ron");
@@ -35,8 +37,7 @@ fn main() -> amethyst::Result<()> {
         .with_system_desc(crate::events::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
-                .with_plugin(
-                    RenderToWindow::from_config_path(display_config_path)?
+                .with_plugin(RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
                 )
                 .with_plugin(RenderFlat2D::default())

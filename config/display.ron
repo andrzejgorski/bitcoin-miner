@@ -1,4 +1,4 @@
 (
     title: "Bitcoin Miner",
-    dimensions: Some((500, 500)),
+    fullscreen: Some(MonitorIdent(0, "")) ,
 )
