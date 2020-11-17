@@ -1,11 +1,10 @@
-
-use amethyst::assets::{Loader};
 use amethyst::ecs::{Entity, World, WorldExt};
 use amethyst::ui::{
     Anchor, LineMode, UiText, UiTransform, UiEventType, Interactable,TtfFormat,
 };
 use amethyst::prelude::{Builder, GameData, SimpleState, SimpleTrans, StateData};
 use amethyst::StateEvent;
+use amethyst::assets::Loader;
 
 pub const TEMP_LOGO: &str = "Bitcoin miner";
 
@@ -25,6 +24,7 @@ pub struct MainMenuState {
 
 impl SimpleState for MainMenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+
         let world = data.world;
 
         self.game_logo = initialise_ui_element(-3, TEMP_LOGO, world);
