@@ -14,10 +14,7 @@ use amethyst::{
     utils::application_root_dir,
     ui::{RenderUi, UiBundle},
     input::{InputBundle, StringBindings},
-    config::Config,
-};
-use amethyst::window::ScreenDimensions;
-
+ };
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());

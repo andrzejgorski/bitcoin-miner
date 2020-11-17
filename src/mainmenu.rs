@@ -1,18 +1,18 @@
 
 use amethyst::assets::{Loader};
-use amethyst::ecs::{Entity, World, WorldExt};
+use amethyst::ecs::{Entity, World, WorldExt, Component, DenseVecStorage};
 use amethyst::ui::{
     Anchor, LineMode, UiText, UiTransform, UiEventType, Interactable,TtfFormat,
 };
 use amethyst::prelude::{Builder, GameData, SimpleState, SimpleTrans, StateData};
 use amethyst::StateEvent;
 
-const TEMP_LOGO: &str = "Bitcoin miner";
+pub const TEMP_LOGO: &str = "Bitcoin miner";
 
-const BUTTON_NEW: &str = "new game";
-const BUTTON_LOAD: &str = "load game";
-const BUTTON_OPTIONS: &str = "options";
-const BUTTON_QUIT: &str = "quit";
+pub const BUTTON_NEW: &str = "new game";
+pub const BUTTON_LOAD: &str = "load game";
+pub const BUTTON_OPTIONS: &str = "options";
+pub const BUTTON_QUIT: &str = "quit";
 
 #[derive(Default)]
 pub struct MainMenuState {
@@ -21,6 +21,14 @@ pub struct MainMenuState {
     button_load: Option<Entity>,
     button_options: Option<Entity>,
     button_quit: Option<Entity>,
+}
+
+pub struct Button {
+    pub text_color: [f32;4],
+    pub label: String,
+}
+impl Component for Button {
+    type Storage = DenseVecStorage<Self>;
 }
 
 impl SimpleState for MainMenuState {
