@@ -541,6 +541,7 @@ name = "bitcoin-miner"
 version = "0.1.0"
 dependencies = [
  "amethyst",
+ "log",
 ]
 
 [[package]]

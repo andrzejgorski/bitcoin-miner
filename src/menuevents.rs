@@ -4,7 +4,6 @@ use amethyst::{
     ecs::{Read, WriteStorage},
     shrev::{EventChannel, ReaderId},
     ui::{UiEvent, UiEventType, UiText, UiTransform,},
-    utils::application_root_dir,
 };
 use crate::mainmenu::TEMP_LOGO;
 
