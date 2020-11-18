@@ -1,0 +1,172 @@
+#![enable(implicit_some)]
+// Detailed field information can be found at https://docs.amethyst.rs/master/amethyst_ui/enum.UiWidget.html and related pages
+Container(
+    transform: (
+        id: "background",
+        anchor: Middle,
+        stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
+        width: 20.,
+        height: 20.,
+    ),
+    background: SolidColor(0.00, 0.00, 0.00, 1.0),
+    children: [
+        Label(
+            transform: (
+                id: "game_logo",
+                y: 90,
+                width: 500.,
+                height: 50.,
+                tab_order: 2,
+                anchor: Middle,
+            ),
+            text: (
+                text: "Bitcoin Miner",
+                font: File("font/square.ttf", ("TTF", ())),
+                font_size: 45.,
+                color: (1.0, 1.0, 1.0, 1.0),
+            )
+        ),
+        Container(
+            transform: (
+                id: "container_start",
+                y: 0,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.0, 0.0, 0.0, 1.0),
+            children: [
+
+                Button(
+                    transform: (
+                        id: "new game",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 1,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "new games",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color:(0.5, 0.5, 0.5, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                        press_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
+
+
+        Container(
+            transform: (
+                id: "container_load",
+                y: -45,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.00, 0.00, 0.00, 1.0),
+            children: [
+
+                // Complex Button
+                Button(
+                    transform: (
+                        id: "load game",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "load game",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                        press_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
+
+
+        Container(
+            transform: (
+                id: "container_options",
+                y: -90,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.00, 0.00, 0.00, 1.0),
+            children: [
+
+                // Complex Button
+                Button(
+                    transform: (
+                        id: "options",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "options",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                        press_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
+
+
+        Container(
+            transform: (
+                id: "container_quit",
+                y: -135,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.00, 0.00, 0.00, 1.0),
+            children: [
+
+                // Complex Button
+                Button(
+                    transform: (
+                        id: "quit",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 3,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "quit",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
+                        press_text_color: (1.0, 0.0, 0.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
+
+    ],
+)

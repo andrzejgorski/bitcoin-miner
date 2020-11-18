@@ -1,12 +1,15 @@
-use amethyst::ecs::{Entity, World, WorldExt};
-use amethyst::ui::{
-    Anchor, LineMode, UiText, UiTransform, UiEventType, Interactable,TtfFormat,
-};
-use amethyst::prelude::{Builder, GameData, SimpleState, SimpleTrans, StateData};
+use amethyst::ecs::{Entity, WorldExt};
+use amethyst::ui::UiEventType;
+use amethyst::prelude::{ GameData, SimpleState, SimpleTrans, StateData};
 use amethyst::StateEvent;
-use amethyst::assets::Loader;
+use amethyst::{
+    input::{is_close_requested, is_key_down},
+    prelude::*,
+    ui::{UiCreator, UiEvent, UiFinder},
+    winit::VirtualKeyCode,
+};
 
-pub const TEMP_LOGO: &str = "Bitcoin miner";
+use crate::gamestate::GameState;
 
 pub const BUTTON_NEW: &str = "new game";
 pub const BUTTON_LOAD: &str = "load game";
@@ -15,7 +18,7 @@ pub const BUTTON_QUIT: &str = "quit";
 
 #[derive(Default)]
 pub struct MainMenuState {
-    game_logo: Option<Entity>,
+    ui_root: Option<Entity>,
     button_new: Option<Entity>,
     button_load: Option<Entity>,
     button_options: Option<Entity>,
@@ -27,81 +30,79 @@ impl SimpleState for MainMenuState {
 
         let world = data.world;
 
-        self.game_logo = initialise_ui_element(-3, TEMP_LOGO, world);
+        self.ui_root =
+            Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
+    }
 
-        self.button_new = initialise_ui_element(0, BUTTON_NEW, world);
-        self.button_load = initialise_ui_element(1, BUTTON_LOAD, world);
-        self.button_options = initialise_ui_element(2, BUTTON_OPTIONS,  world);
-        self.button_quit = initialise_ui_element(3, BUTTON_QUIT, world);
+    fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+        // only search for buttons if they have not been found yet
+        let StateData { world, .. } = state_data;
+
+        if self.button_new.is_none()
+            || self.button_load.is_none()
+            || self.button_options.is_none()
+            || self.button_quit.is_none()
+        {
+            world.exec(|ui_finder: UiFinder<'_>| {
+                self.button_new = ui_finder.find(BUTTON_NEW);
+                self.button_load = ui_finder.find(BUTTON_LOAD);
+                self.button_options = ui_finder.find(BUTTON_OPTIONS);
+                self.button_quit = ui_finder.find(BUTTON_QUIT);
+            });
+        }
+
+        Trans::None
     }
 
     fn handle_event(
         &mut self,
-    	_data: StateData<'_, GameData<'_, '_>>,
-    	event: StateEvent) -> SimpleTrans {
-    	if let StateEvent::Ui(ui_event) = event {
-    		let is_target = ui_event.target == self.button_quit.unwrap();
-
-    		match ui_event.event_type {
-    			UiEventType::Click if is_target => {
-                    return SimpleTrans::Quit;
-                    
-    			},
-    			_ => {
-    				return SimpleTrans::None;
-    			},  
-    		};
-    	}
-
-    	SimpleTrans::None
+        _: StateData<'_, GameData<'_, '_>>,
+        event: StateEvent,
+    ) -> SimpleTrans {
+        match event {
+            StateEvent::Window(event) => {
+                if is_close_requested(&event) {
+                    log::info!("[Trans::Quit] Quitting Application!");
+                    Trans::Quit
+                } else if is_key_down(&event, VirtualKeyCode::Escape) {
+                    log::info!("[Trans::Switch] Switching back to WelcomeScreen!");
+                    Trans::Quit
+                } else {
+                    Trans::None
+                }
+            }
+            StateEvent::Ui(UiEvent {
+                event_type: UiEventType::Click,
+                target,
+            }) => {
+                if Some(target) == self.button_new {
+                    log::info!("[Trans::Switch] Switching to Game!");
+                    return Trans::Switch(Box::new(GameState::default()));
+                }
+                if Some(target) == self.button_load || Some(target) == self.button_options {
+                    log::info!("This Buttons functionality is not yet implemented!");
+                }
+                if Some(target) == self.button_quit || Some(target) == self.button_quit {
+                    log::info!("Bye Bye!");
+                    return Trans::Quit;
+                }
+                Trans::None
+            }
+            _ => Trans::None,
+        }
     }
-}
+    fn on_stop(&mut self, data: StateData<GameData>) {
+        // after destroying the current UI, invalidate references as well (makes things cleaner)
+        if let Some(root_entity) = self.ui_root {
+            data.world
+                .delete_entity(root_entity)
+                .expect("Failed to remove MainMenu");
+        }
 
-fn initialise_ui_element(position: i32, label: &str, world: &mut World) -> Option<Entity> {
-
-    let color = if label == BUTTON_QUIT 
-    {
-        [1.0f32, 0.3f32, 0.3f32, 0.5f32]
-    }   else {
-        [1.0f32, 1.0f32, 1.0f32, 0.5f32]
-    };
-
-    let font_size = if label == TEMP_LOGO{ 30.0 } else { 25.0 }; 
-
-    let font_handle = world.read_resource::<Loader>().load(
-        "font/square.ttf",
-        TtfFormat,
-        (),
-        &world.read_resource(),
-        );
-
-    /* Create the transform */
-    let ui_transform = UiTransform::new(
-        String::from(label), // id
-        Anchor::Middle,                // anchor
-        Anchor::Middle,                // pivot
-        0f32,                          // x
-        ((position * -30) ) as f32,   // y
-        0f32,                          // z
-        400f32,                        // width
-        35f32,                         // height
-        );
-    /* Create the text */
-    let ui_text = UiText::new(
-        font_handle,                      // font
-        String::from(label),                    // text
-        color, // color
-        font_size,                            // font_size
-        LineMode::Single,                 // line_mode
-        Anchor::Middle,                   // align
-        );
-
-    /* Building the entity */
-    let ui = world.create_entity()
-        .with(ui_transform)
-        .with(ui_text)
-        .with(Interactable)   
-        .build();
- 
-    return Some(ui);
+        self.ui_root = None;
+        self.button_new = None;
+        self.button_load = None;
+        self.button_options = None;
+        self.button_quit = None;
+    }
 }

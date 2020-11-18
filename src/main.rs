@@ -1,19 +1,22 @@
 mod mainmenu;
+mod gamestate;
+mod pause;
 use crate::mainmenu::MainMenuState;
-mod menuevents;
+//mod menuevents;
 
 use amethyst::{
     core::TransformBundle,
     prelude::*,
     renderer::{
-        plugins::{RenderToWindow},
+        plugins::RenderToWindow,
         types::DefaultBackend,
         RenderingBundle,
         RenderFlat2D,
     },
-    utils::application_root_dir,
+    utils::{application_root_dir, fps_counter::FpsCounterBundle},
     ui::{RenderUi, UiBundle},
     input::{InputBundle, StringBindings},
+    assets::HotReloadBundle,
  };
 
 fn main() -> amethyst::Result<()> {
@@ -31,7 +34,9 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with_bundle(UiBundle::<StringBindings>::new())?
-        .with_system_desc(crate::menuevents::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
+        .with_bundle(HotReloadBundle::default())?
+        //.with_system_desc(crate::menuevents::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
+        .with_bundle(FpsCounterBundle)?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?
