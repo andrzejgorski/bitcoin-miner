@@ -27,29 +27,27 @@ pub struct MainMenuState {
 
 impl SimpleState for MainMenuState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-
-        let world = data.world;
-
+        log::info!("Start Stanu Menu");
         self.ui_root =
-            Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
+                Some(data.world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     }
 
     fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
         // only search for buttons if they have not been found yet
         let StateData { world, .. } = state_data;
-
-        if self.button_new.is_none()
-            || self.button_load.is_none()
-            || self.button_options.is_none()
-            || self.button_quit.is_none()
+        if self.button_new.is_none() || self.button_load.is_none() ||
+            self.button_options.is_none() || self.button_options.is_none()
         {
             world.exec(|ui_finder: UiFinder<'_>| {
                 self.button_new = ui_finder.find(BUTTON_NEW);
                 self.button_load = ui_finder.find(BUTTON_LOAD);
                 self.button_options = ui_finder.find(BUTTON_OPTIONS);
-                self.button_quit = ui_finder.find(BUTTON_QUIT);
+                self.button_quit = ui_finder.find(BUTTON_QUIT); 
+                log::info!("test button: {:?}, fps: {:?}", ui_finder.find("test"), ui_finder.find("fps"));
+                
             });
         }
+
 
         Trans::None
     }
@@ -98,7 +96,7 @@ impl SimpleState for MainMenuState {
                 .delete_entity(root_entity)
                 .expect("Failed to remove MainMenu");
         }
-
+        
         self.ui_root = None;
         self.button_new = None;
         self.button_load = None;
