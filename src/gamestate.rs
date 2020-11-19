@@ -60,7 +60,7 @@ impl SimpleState for GameState {
         self.ui_root =
             Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/example.ron", ())));
 
-        let a_sprite_sheet_handle = load_sprite_sheet(world, "texture/cp437_20x20.png", "texture/cp437_20x20.ron");
+        let a_sprite_sheet_handle = load_sprite_sheet(world, "texture/nature_tileset.png", "texture/nature_tileset.ron");
         //self.sprite_sheet_handle = Some(a_sprite_sheet_handle);
 
         let (width, height) = {
