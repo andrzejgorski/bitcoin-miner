@@ -2,9 +2,9 @@ mod mainmenu;
 mod gamestate;
 mod exampletile;
 mod pause;
-use crate::mainmenu::MainMenuState;
+mod systems;
+
 use crate::exampletile::ExampleTile;
-//mod menuevents;
 
 use amethyst::{
     core::{TransformBundle},
@@ -45,7 +45,10 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(HotReloadBundle::default())?
         .with_bundle(FpsCounterBundle)?
-        //.with_system_desc(crate::menuevents::UiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
+        //.with(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
+        //.with(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
+        //.with(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
+        .with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?
@@ -58,7 +61,14 @@ fn main() -> amethyst::Result<()> {
                 
         )?;
 
+    
+    //*************** Do Debugowania Stanów odpalamy odrazu grę**********************
+    //use crate::gamestate::GameState;
+    //let mut game = Application::build(assets_dir, GameState::default())?.build(game_data)?;
+
+    use crate::mainmenu::MainMenuState;
     let mut game = Application::build(assets_dir, MainMenuState::default())?.build(game_data)?;
+
     game.run();
 
     Ok(())

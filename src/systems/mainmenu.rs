@@ -8,20 +8,20 @@ use amethyst::{
 use crate::mainmenu::{BUTTON_NEW, BUTTON_LOAD, BUTTON_OPTIONS, BUTTON_QUIT};
 
 #[derive(SystemDesc)]
-#[system_desc(name(UiEventHandlerSystemDesc))]
-pub struct UiEventHandlerSystem {
+#[system_desc(name(MainMenuUiEventHandlerSystemDesc))]
+pub struct MainMenuUiEventHandlerSystem {
     #[system_desc(event_channel_reader)]
     reader_id: ReaderId<UiEvent>,
     
 }
 
-impl UiEventHandlerSystem {
+impl MainMenuUiEventHandlerSystem {
     pub fn new(reader_id: ReaderId<UiEvent>) -> Self {
         Self { reader_id }
     }
 }
 
-impl<'s> System<'s> for UiEventHandlerSystem {
+impl<'s> System<'s> for MainMenuUiEventHandlerSystem {
     type SystemData = (
         Read<'s, EventChannel<UiEvent>>,
         WriteStorage<'s, UiText>,
@@ -29,10 +29,13 @@ impl<'s> System<'s> for UiEventHandlerSystem {
     );
 
     fn run(&mut self, (events, uiText, mut transforms): Self::SystemData) {
-
-        //let evs = events.read(&mut self.reader_id);
         
+        /* KOD NA RAZIE NIC NIE ROBI BO NIE DZIAŁA */
+
         for event in events.read(&mut self.reader_id) {
+
+            
+
             //println!("event target: {:?}" , transforms.get_mut(event.target).unwrap().id);
             
             //for (trans, texts) in (&mut transforms, &uiText).join() {
