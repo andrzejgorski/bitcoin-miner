@@ -24,8 +24,6 @@ use amethyst::{
     tiles::{MortonEncoder, RenderTiles2D},
  };
 
-
-
 fn main() -> amethyst::Result<()> {
     amethyst::Logger::from_config(Default::default())
         .level_for("amethyst_tiles", log::LevelFilter::Warn)
@@ -35,7 +33,7 @@ fn main() -> amethyst::Result<()> {
     let display_config_path = app_root.join("config").join("display.ron");
     let assets_dir = app_root.join("assets/");
 
-    let binding_path = app_root.join("config").join("bindings.ron");
+    let binding_path = app_root.join("config").join("input.ron");
     let input_bundle = InputBundle::<StringBindings>::new()
         .with_bindings_from_file(binding_path)?;
 
@@ -45,10 +43,10 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(HotReloadBundle::default())?
         .with_bundle(FpsCounterBundle)?
-        //.with(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
-        //.with(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
-        //.with(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
-        .with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
+        .with(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
+        .with(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
+        .with(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
+        //.with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?
