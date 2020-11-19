@@ -1,11 +1,13 @@
-mod mainmenu;
-mod gamestate;
+//mod mainmenu;
+//mod gamestate;
 mod exampletile;
-mod pause;
+//mod pause;
 mod systems;
 mod game_data;
+mod states;
+mod move_button_on_click;
 //use crate::gamestate::GameState;
-use crate::mainmenu::MainMenuState;
+use crate::states::MainMenuState;
 use crate::exampletile::ExampleTile;
 use crate::game_data::CustomGameDataBuilder;
 use amethyst::{
@@ -49,7 +51,6 @@ fn main() -> amethyst::Result<()> {
         //.with_running(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
         //.with_running(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
         //.with_running(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
-        //.with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_base_bundle(
             &mut app_builder.world, 
             RenderingBundle::<DefaultBackend>::new()

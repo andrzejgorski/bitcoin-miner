@@ -1,10 +1,10 @@
-use crate::pause::PauseMenuState;
+use crate::states::PauseMenuState;
 use crate::exampletile::ExampleTile;
 
 use crate::game_data::CustomGameData;
 
 use amethyst::{
-    core::{Time,math::{Vector3}},
+    core::{Time,math::Vector3,Transform},
     ecs::prelude::{Entity, WorldExt},
     input::{is_close_requested, is_key_down},
     prelude::*,
@@ -13,25 +13,14 @@ use amethyst::{
     winit::VirtualKeyCode,
     tiles::{MortonEncoder, TileMap},
     window::ScreenDimensions,
-};
-use amethyst::{
     assets::{AssetStorage, Loader},
-    core::{
-         Transform,
-    },
-
-    //input::{is_close_requested, is_key_down, InputBundle, InputHandler, StringBindings},
     renderer::{
         camera::{ Camera},
         debug_drawing::DebugLinesComponent,
         formats::texture::ImageFormat,
-
         sprite::{ SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
-        
-        
         Texture,
     },
-
 };
 
 #[derive(Default)]

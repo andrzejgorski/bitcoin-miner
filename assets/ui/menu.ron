@@ -94,7 +94,7 @@ Container(
 
         Button(
             transform: (
-                id: "quit",
+                id: "exit",
                 y: -135,
                 width: 300.,
                 height: 40.,
@@ -103,7 +103,7 @@ Container(
                 mouse_reactive: true,
             ),
             button: (
-                text: "quit",
+                text: "exit",
                 font: File("font/square.ttf", ("TTF", ())),
                 font_size: 30.,
                 normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500

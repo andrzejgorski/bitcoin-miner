@@ -8,23 +8,27 @@ use amethyst::{
     TransEvent,
 };
 use crate::game_data::CustomGameData;
-use crate::mainmenu::MainMenuState;
+use crate::states::MainMenuState;
 
 /// Adapted, originally from amethyst/evoli src/states/pause_menu.rs
+// ID's for buttons in the prefab. Required to identify them.
+
+const BUTTON_RESUME_ID: &str = "resume";
+const BUTTON_SAVE_ID: &str = "save_game";
+const BUTTON_OPTIONS_ID: &str = "paused_options";
+const BUTTON_EXIT_TO_MAIN_MENU_ID: &str = "exit_to_main_menu";
+const BUTTON_EXIT_ID: &str = "exit";
 
 #[derive(Default)]
 pub struct PauseMenuState {
     // button entities are created in on_start() and destroyed in on_stop()
-    resume_button: Option<Entity>,
-    exit_to_main_menu_button: Option<Entity>,
-    exit_button: Option<Entity>,
+    button_resume: Option<Entity>,
+    button_save: Option<Entity>,
+    button_options: Option<Entity>,
+    button_exit_to_main_menu: Option<Entity>,
+    button_exit: Option<Entity>,
     root: Option<Entity>,
 }
-
-// ID's for buttons in the prefab. Required to identify them.
-const RESUME_BUTTON_ID: &str = "resume";
-const EXIT_TO_MAIN_MENU_BUTTON_ID: &str = "exit_to_main_menu";
-const EXIT_BUTTON_ID: &str = "exit";
 
 // load the pause_menu.ron prefab then instantiate it
 // if the "resume" button is clicked, goto MainGameState
@@ -44,8 +48,11 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
                 self.root = None;
             }
         }
-        self.resume_button = None;
-        self.exit_to_main_menu_button = None;
+        self.button_resume = None;
+        self.button_save = None;
+        self.button_options = None;
+        self.button_exit_to_main_menu = None;
+        self.button_exit = None;
     }
 
     fn handle_event(
@@ -69,10 +76,10 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
                 event_type: UiEventType::Click,
                 target,
             }) => {
-                if Some(target) == self.resume_button {
+                if Some(target) == self.button_resume {
                     log::info!("Resuming Game!");
                     Trans::Pop
-                } else if Some(target) == self.exit_to_main_menu_button {
+                } else if Some(target) == self.button_exit_to_main_menu {
                     let mut state_transition_event_channel = data
                         .world
                         .write_resource::<EventChannel<TransEvent<CustomGameData, StateEvent>>>();
@@ -88,11 +95,39 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
                     
                     Trans::None// we could also not add the pop to the channel and Pop here
                                 // but like this the execution order is guaranteed (in the next versions)
-                } else if Some(target) == self.exit_button {
+                } else if Some(target) == self.button_exit {
                     Trans::Quit
                 } else {
                     Trans::None
                 }
+                
+            }
+            StateEvent::Ui(UiEvent {
+                event_type: UiEventType::ClickStart,
+                target,
+            }) => {
+                
+                if Some(target) == self.button_resume || 
+                    Some(target) ==  self.button_save ||
+                    Some(target) ==  self.button_exit_to_main_menu ||
+                    Some(target) ==  self.button_options ||
+                    Some(target) ==  self.button_exit {
+                    crate::move_button_on_click::move_button(data, Some(target), 5.)
+                }
+                Trans::None
+            }
+            StateEvent::Ui(UiEvent {
+                event_type: UiEventType::ClickStop,
+                target,
+            }) => {
+                if Some(target) == self.button_resume || 
+                    Some(target) ==  self.button_save ||
+                    Some(target) ==  self.button_exit_to_main_menu ||
+                    Some(target) ==  self.button_options ||
+                    Some(target) ==  self.button_exit {
+                    crate::move_button_on_click::move_button(data, Some(target), -5.)
+                }
+                Trans::None
             }
             _ => Trans::None,
         }
@@ -101,14 +136,17 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
     fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent>  {
         data.data.update(&data.world, false);
         // once deferred creation of the root ui entity finishes, look up buttons
-        if self.resume_button.is_none()
-            || self.exit_to_main_menu_button.is_none()
-            || self.exit_button.is_none()
+        if self.button_resume.is_none()
+            || self.button_exit_to_main_menu.is_none()
+            || self.button_exit.is_none()
+            || self.button_options.is_none()
         {
             data.world.exec(|ui_finder: UiFinder<'_>| {
-                self.resume_button = ui_finder.find(RESUME_BUTTON_ID);
-                self.exit_to_main_menu_button = ui_finder.find(EXIT_TO_MAIN_MENU_BUTTON_ID);
-                self.exit_button = ui_finder.find(EXIT_BUTTON_ID);
+                self.button_resume = ui_finder.find(BUTTON_RESUME_ID);
+                self.button_save = ui_finder.find(BUTTON_SAVE_ID);
+                self.button_exit_to_main_menu = ui_finder.find(BUTTON_EXIT_TO_MAIN_MENU_ID);
+                self.button_options = ui_finder.find(BUTTON_OPTIONS_ID);
+                self.button_exit = ui_finder.find(BUTTON_EXIT_ID);
             });
         }
         Trans::None

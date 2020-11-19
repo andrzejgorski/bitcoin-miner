@@ -1,20 +1,23 @@
-use amethyst::ecs::{Entity, WorldExt};
-use amethyst::ui::UiEventType;
-use amethyst::prelude::StateData;
-use amethyst::StateEvent;
+
 use amethyst::{
+    ecs::{Entity, WorldExt},
+    ui::UiEventType,
+    prelude::StateData,
+    StateEvent,
     input::{is_close_requested, is_key_down},
     prelude::*,
     ui::{UiCreator, UiEvent, UiFinder},
     winit::VirtualKeyCode,
 };
 
-use crate::gamestate::GameState;
+use crate::states::GameState;
+
 use crate::game_data::CustomGameData;
-pub const BUTTON_NEW: &str = "new game";
-pub const BUTTON_LOAD: &str = "load game";
-pub const BUTTON_OPTIONS: &str = "options";
-pub const BUTTON_QUIT: &str = "quit";
+
+pub const BUTTON_NEW_ID: &str = "new game";
+pub const BUTTON_LOAD_ID: &str = "load game";
+pub const BUTTON_OPTIONS_ID: &str = "options";
+pub const BUTTON_QUIT_ID: &str = "exit";
 
 #[derive(Default)]
 pub struct MainMenuState {
@@ -42,22 +45,21 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
             self.button_options.is_none() || self.button_options.is_none()
         {
             world.exec(|ui_finder: UiFinder<'_>| {
-                self.button_new = ui_finder.find(BUTTON_NEW);
-                self.button_load = ui_finder.find(BUTTON_LOAD);
-                self.button_options = ui_finder.find(BUTTON_OPTIONS);
-                self.button_quit = ui_finder.find(BUTTON_QUIT); 
+                self.button_new = ui_finder.find(BUTTON_NEW_ID);
+                self.button_load = ui_finder.find(BUTTON_LOAD_ID);
+                self.button_options = ui_finder.find(BUTTON_OPTIONS_ID);
+                self.button_quit = ui_finder.find(BUTTON_QUIT_ID); 
                 //log::info!("test button: {:?}, fps: {:?}", ui_finder.find("test"), ui_finder.find("fps"));
                 
             });
-        }
-
+        } 
         
         Trans::None
     }
 
     fn handle_event(
         &mut self,
-        _data: StateData<CustomGameData>,
+        data: StateData<CustomGameData>,
         event: StateEvent,
     ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         match event {
@@ -89,6 +91,31 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
                 }
                 Trans::None
             }
+            StateEvent::Ui(UiEvent {
+                event_type: UiEventType::ClickStart,
+                target,
+            }) => {
+                
+                if Some(target) == self.button_new || 
+                    Some(target) ==  self.button_load ||
+                    Some(target) ==  self.button_options ||
+                    Some(target) ==  self.button_quit {
+                    crate::move_button_on_click::move_button(data, Some(target), 5.)
+                }
+                Trans::None
+            }
+            StateEvent::Ui(UiEvent {
+                event_type: UiEventType::ClickStop,
+                target,
+            }) => {
+                if Some(target) == self.button_new || 
+                    Some(target) ==  self.button_load ||
+                    Some(target) ==  self.button_options ||
+                    Some(target) ==  self.button_quit {
+                    crate::move_button_on_click::move_button(data, Some(target), -5.)
+                }
+                Trans::None
+            }
             _ => Trans::None,
         }
     }
@@ -106,4 +133,11 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
         self.button_options = None;
         self.button_quit = None;
     }
-}
+}/*
+fn move_button (data: StateData<CustomGameData>,entity: Option<Entity>, y_trasnaltion: f32){
+    let StateData { world, .. } = data;
+    let mut ui_transform = world.write_storage::<UiTransform>();
+    if let Some(entity) = entity.and_then(|entity| ui_transform.get_mut(entity)) {
+        entity.local_y = entity.local_y - y_trasnaltion;
+    }
+}*/
