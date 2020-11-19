@@ -27,177 +27,91 @@ Container(
                 color: (1.0, 1.0, 1.0, 1.0),
             )
         ),
-        Container(
+        Button(
             transform: (
-                id: "container_start",
+                id: "new game",
                 y: 0,
                 width: 300.,
-                height: 45.,
+                height: 40.,
+                tab_order: 1,
                 anchor: Middle,
+                mouse_reactive: true,
             ),
-            background: SolidColor(0.0, 0.0, 0.0, 0.0),
-            children: [
-
-                Button(
-                    transform: (
-                        id: "new game",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 1,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "new games",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color:(0.5, 0.5, 0.5, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
-                        press_text_color: (1.0, 1.0, 1.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
+            button: (
+                text: "new games",
+                font: File("font/square.ttf", ("TTF", ())),
+                font_size: 30.,
+                normal_text_color:(0.5, 0.5, 0.5, 1.0), // ffa500
+                hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                press_text_color: (1.0, 1.0, 1.0, 1.0),
+                normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+            )
         ),
 
-
-        Container(
+        Button(
             transform: (
-                id: "container_load",
+                id: "load game",
                 y: -45,
                 width: 300.,
-                height: 45.,
+                height: 40.,
+                tab_order: 2,
                 anchor: Middle,
+                mouse_reactive: true,
             ),
-            background: SolidColor(0.00, 0.00, 0.00, 0.0),
-            children: [
-
-                // Complex Button
-                Button(
-                    transform: (
-                        id: "load game",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 2,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "load game",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
-                        press_text_color: (1.0, 1.0, 1.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
+            button: (
+                text: "load game",
+                font: File("font/square.ttf", ("TTF", ())),
+                font_size: 30.,
+                normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
+                hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                press_text_color: (1.0, 1.0, 1.0, 1.0),
+                normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+            )
         ),
-
-        Container(
+        Button(
             transform: (
-                id: "container_quit",
-                y: -135,
-                width: 300.,
-                height: 45.,
-                anchor: Middle,
-            ),
-            background: SolidColor(0.00, 0.00, 0.00, 0.0),
-            children: [
-
-                // Complex Button
-                Button(
-                    transform: (
-                        id: "quit",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 4,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "quit",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
-                        press_text_color: (1.0, 0.0, 0.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
-        ),
-        Container(
-            transform: (
-                id: "container_test",
-                y: -195,
-                width: 300.,
-                height: 45.,
-                anchor: Middle,
-            ),
-            background: SolidColor(0.00, 0.00, 0.00, 0.0),
-            children: [
-
-                // Complex Button
-                Button(
-                    transform: (
-                        id: "test",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 5,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "test",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
-                        press_text_color: (1.0, 1.0, 1.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
-        ),
-        Container(
-            transform: (
-                id: "container_options",
+                id: "options",
                 y: -90,
                 width: 300.,
-                height: 45.,
+                height: 40.,
+                tab_order: 3,
                 anchor: Middle,
+                mouse_reactive: true,
             ),
-            background: SolidColor(0.00, 0.00, 0.00, 0.0),
-            children: [
+            button: (
+                text: "options",
+                font: File("font/square.ttf", ("TTF", ())),
+                font_size: 30.,
+                normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
+                hover_text_color: (0.8, 0.8, 0.8, 1.0),
+                press_text_color: (1.0, 1.0, 1.0, 1.0),
+                normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+            )
+        ),
 
-                // Complex Button
-                Button(
-                    transform: (
-                        id: "options",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 3,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "options",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color: (0.5, 0.5, 0.5, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.8, 0.8, 1.0),
-                        press_text_color: (1.0, 1.0, 1.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
+        Button(
+            transform: (
+                id: "quit",
+                y: -135,
+                width: 300.,
+                height: 40.,
+                tab_order: 4,
+                anchor: Middle,
+                mouse_reactive: true,
+            ),
+            button: (
+                text: "quit",
+                font: File("font/square.ttf", ("TTF", ())),
+                font_size: 30.,
+                normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
+                hover_text_color: (0.8, 0.0, 0.0, 1.0),
+                press_text_color: (1.0, 0.0, 0.0, 1.0),
+                normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+            )
         ),
         
     ],
