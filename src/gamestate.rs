@@ -48,7 +48,7 @@ pub struct GameState {
 
 impl <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for GameState {
     fn on_start(&mut self, data: StateData<CustomGameData>) {
-        
+        log::info!("Start Stanu Gra");
         //let StateData { mut world, .. } = data;
         let world = data.world;
         // needed for registering audio output.
@@ -98,11 +98,11 @@ impl <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for GameState {
 
     }
 
-    fn on_pause(&mut self, data: StateData<CustomGameData>) {
+    fn on_pause(&mut self, _data: StateData<CustomGameData>) {
         self.paused = true;
     }
 
-    fn on_resume(&mut self, data: StateData<CustomGameData>) {
+    fn on_resume(&mut self, _data: StateData<CustomGameData>) {
         self.paused = false;
     }
 
@@ -121,7 +121,7 @@ impl <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for GameState {
 
     fn handle_event(
         &mut self,
-        data: StateData<CustomGameData>,
+        _data: StateData<CustomGameData>,
         event: StateEvent,
     ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         match &event {
@@ -152,8 +152,9 @@ impl <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for GameState {
 
 
     fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent>  {
+        data.data.update(&data.world, false);
         let StateData { world, .. } = data;
-        
+       
         // this cannot happen in 'on_start', as the entity might not be fully
         // initialized/registered/created yet.
         if self.fps_display.is_none() {

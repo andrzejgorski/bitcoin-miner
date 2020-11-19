@@ -99,6 +99,7 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
     }
 
     fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent>  {
+        data.data.update(&data.world, false);
         // once deferred creation of the root ui entity finishes, look up buttons
         if self.resume_button.is_none()
             || self.exit_to_main_menu_button.is_none()

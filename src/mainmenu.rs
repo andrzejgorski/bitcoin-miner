@@ -1,6 +1,6 @@
 use amethyst::ecs::{Entity, WorldExt};
 use amethyst::ui::UiEventType;
-use amethyst::prelude::{ GameData, SimpleState, SimpleTrans, StateData};
+use amethyst::prelude::StateData;
 use amethyst::StateEvent;
 use amethyst::{
     input::{is_close_requested, is_key_down},
@@ -27,12 +27,15 @@ pub struct MainMenuState {
 
 impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
     fn on_start(&mut self, data: StateData<CustomGameData>) {
-        log::info!("Start Stanu Menu");
+        
         self.ui_root =
                 Some(data.world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
+        
+        log::info!("Ui Loaded");
     }
 
     fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
+        data.data.update(&data.world, false);
         // only search for buttons if they have not been found yet
         let StateData { world, .. } = data;
         if self.button_new.is_none() || self.button_load.is_none() ||
@@ -43,18 +46,18 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
                 self.button_load = ui_finder.find(BUTTON_LOAD);
                 self.button_options = ui_finder.find(BUTTON_OPTIONS);
                 self.button_quit = ui_finder.find(BUTTON_QUIT); 
-                log::info!("test button: {:?}, fps: {:?}", ui_finder.find("test"), ui_finder.find("fps"));
+                //log::info!("test button: {:?}, fps: {:?}", ui_finder.find("test"), ui_finder.find("fps"));
                 
             });
         }
 
-
+        
         Trans::None
     }
 
     fn handle_event(
         &mut self,
-        data: StateData<CustomGameData>,
+        _data: StateData<CustomGameData>,
         event: StateEvent,
     ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         match event {
