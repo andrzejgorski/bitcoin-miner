@@ -1,7 +1,6 @@
 use crate::pause::PauseMenuState;
 use crate::exampletile::ExampleTile;
 
-
 use amethyst::{
     core::{Time,math::{Vector3},Parent},
     ecs::prelude::{Entity, WorldExt},
