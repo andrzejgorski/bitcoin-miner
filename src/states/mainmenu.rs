@@ -2,17 +2,15 @@
 use amethyst::{
     ecs::{Entity, WorldExt},
     ui::UiEventType,
-    prelude::StateData,
+    prelude::*,
     StateEvent,
     input::{is_close_requested, is_key_down},
-    prelude::*,
     ui::{UiCreator, UiEvent, UiFinder},
     winit::VirtualKeyCode,
 };
-
 use crate::states::GameState;
 
-use crate::game_data::CustomGameData;
+//use crate::game_data::CustomGameData;
 
 pub const BUTTON_NEW_ID: &str = "new game";
 pub const BUTTON_LOAD_ID: &str = "load game";
@@ -28,19 +26,18 @@ pub struct MainMenuState {
     button_quit: Option<Entity>,
 }
 
-impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
-    fn on_start(&mut self, data: StateData<CustomGameData>) {
+impl  SimpleState for MainMenuState {
+    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         
         self.ui_root =
                 Some(data.world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
         
-        log::info!("Ui Loaded");
     }
 
-    fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
-        data.data.update(&data.world, false);
+    fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+        //data.data.update(&data.world, false);
         // only search for buttons if they have not been found yet
-        let StateData { world, .. } = data;
+        let StateData { world, .. } = state_data;
         if self.button_new.is_none() || self.button_load.is_none() ||
             self.button_options.is_none() || self.button_options.is_none()
         {
@@ -49,19 +46,17 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
                 self.button_load = ui_finder.find(BUTTON_LOAD_ID);
                 self.button_options = ui_finder.find(BUTTON_OPTIONS_ID);
                 self.button_quit = ui_finder.find(BUTTON_QUIT_ID); 
-                //log::info!("test button: {:?}, fps: {:?}", ui_finder.find("test"), ui_finder.find("fps"));
-                
             });
         } 
-        
+    
         Trans::None
     }
 
     fn handle_event(
         &mut self,
-        data: StateData<CustomGameData>,
+        data: StateData<'_, GameData<'_, '_>>,
         event: StateEvent,
-    ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
+    ) -> SimpleTrans {
         match event {
             StateEvent::Window(event) => {
                 if is_close_requested(&event) {
@@ -119,7 +114,7 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
             _ => Trans::None,
         }
     }
-    fn on_stop(&mut self, data: StateData<CustomGameData>) {
+    fn on_stop(&mut self, data: StateData<GameData>) {
         // after destroying the current UI, invalidate references as well (makes things cleaner)
         if let Some(root_entity) = self.ui_root {
             data.world
@@ -133,11 +128,4 @@ impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
         self.button_options = None;
         self.button_quit = None;
     }
-}/*
-fn move_button (data: StateData<CustomGameData>,entity: Option<Entity>, y_trasnaltion: f32){
-    let StateData { world, .. } = data;
-    let mut ui_transform = world.write_storage::<UiTransform>();
-    if let Some(entity) = entity.and_then(|entity| ui_transform.get_mut(entity)) {
-        entity.local_y = entity.local_y - y_trasnaltion;
-    }
-}*/
+}

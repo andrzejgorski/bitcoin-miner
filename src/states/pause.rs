@@ -7,7 +7,7 @@ use amethyst::{
     winit::VirtualKeyCode,
     TransEvent,
 };
-use crate::game_data::CustomGameData;
+//use crate::game_data::CustomGameData;
 use crate::states::MainMenuState;
 
 /// Adapted, originally from amethyst/evoli src/states/pause_menu.rs
@@ -34,32 +34,34 @@ pub struct PauseMenuState {
 // if the "resume" button is clicked, goto MainGameState
 // if the "exit_to_main_menu" button is clicked, remove the pause and main game states and go to MenuState.
 // if the "exit" button is clicked, quit the program.
-impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
-    fn on_start(&mut self, data: StateData<CustomGameData>) {
+impl<'a> SimpleState for PauseMenuState {
+    fn on_start(&mut self, data: StateData<GameData>) {
         let world = data.world;
 
         self.root =
             Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/pause_menu.ron", ())));
     }
 
-    fn on_stop(&mut self, data: StateData<CustomGameData>) {
-        if let Some(root) = self.root {
-            if data.world.delete_entity(root).is_ok() {
-                self.root = None;
-            }
+    fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
+        //data.data.update(&data.world, false);
+        // once deferred creation of the root ui entity finishes, look up buttons
+        if self.button_resume.is_none()
+            || self.button_exit_to_main_menu.is_none()
+            || self.button_exit.is_none()
+            || self.button_options.is_none()
+        {
+            data.world.exec(|ui_finder: UiFinder<'_>| {
+                self.button_resume = ui_finder.find(BUTTON_RESUME_ID);
+                self.button_save = ui_finder.find(BUTTON_SAVE_ID);
+                self.button_exit_to_main_menu = ui_finder.find(BUTTON_EXIT_TO_MAIN_MENU_ID);
+                self.button_options = ui_finder.find(BUTTON_OPTIONS_ID);
+                self.button_exit = ui_finder.find(BUTTON_EXIT_ID);
+            });
         }
-        self.button_resume = None;
-        self.button_save = None;
-        self.button_options = None;
-        self.button_exit_to_main_menu = None;
-        self.button_exit = None;
+        Trans::None
     }
 
-    fn handle_event(
-        &mut self,
-        data: StateData<CustomGameData>,
-        event: StateEvent,
-    ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
+    fn handle_event(&mut self, data: StateData<GameData>, event: StateEvent) -> SimpleTrans {
         match event {
             StateEvent::Window(event) => {
                 if is_close_requested(&event) {
@@ -82,7 +84,7 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
                 } else if Some(target) == self.button_exit_to_main_menu {
                     let mut state_transition_event_channel = data
                         .world
-                        .write_resource::<EventChannel<TransEvent<CustomGameData, StateEvent>>>();
+                        .write_resource::<EventChannel<TransEvent<GameData, StateEvent>>>();
 
                     // this allows us to first 'Pop' this state, and then exchange whatever was
                     // below that with a new MainMenu state.
@@ -133,22 +135,17 @@ impl<'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for PauseMenuState {
         }
     }
 
-    fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent>  {
-        data.data.update(&data.world, false);
-        // once deferred creation of the root ui entity finishes, look up buttons
-        if self.button_resume.is_none()
-            || self.button_exit_to_main_menu.is_none()
-            || self.button_exit.is_none()
-            || self.button_options.is_none()
-        {
-            data.world.exec(|ui_finder: UiFinder<'_>| {
-                self.button_resume = ui_finder.find(BUTTON_RESUME_ID);
-                self.button_save = ui_finder.find(BUTTON_SAVE_ID);
-                self.button_exit_to_main_menu = ui_finder.find(BUTTON_EXIT_TO_MAIN_MENU_ID);
-                self.button_options = ui_finder.find(BUTTON_OPTIONS_ID);
-                self.button_exit = ui_finder.find(BUTTON_EXIT_ID);
-            });
+
+    fn on_stop(&mut self, data: StateData<GameData>) {
+        if let Some(root) = self.root {
+            if data.world.delete_entity(root).is_ok() {
+                self.root = None;
+            }
         }
-        Trans::None
+        self.button_resume = None;
+        self.button_save = None;
+        self.button_options = None;
+        self.button_exit_to_main_menu = None;
+        self.button_exit = None;
     }
 }

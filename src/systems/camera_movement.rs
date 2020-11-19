@@ -3,6 +3,7 @@ use amethyst::{
         math::Vector3,
         Transform,
     },
+    derive::SystemDesc,
     ecs::{
         Entities, Join, Read, ReadStorage,
         System, WriteStorage,
@@ -10,7 +11,6 @@ use amethyst::{
     input::{InputHandler, StringBindings},
     renderer::camera::{ActiveCamera, Camera},
 };
-
 
 #[derive(Default)]
 pub struct CameraMovementSystem;
