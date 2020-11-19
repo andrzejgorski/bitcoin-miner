@@ -8,6 +8,8 @@ edition = "2018"
 
 [dependencies]
 log = "0.4.11"
+rand = "0.7.3"
+
 [dependencies.amethyst]
 version = "0.15.1"
 features = ["vulkan", "tiles"]
