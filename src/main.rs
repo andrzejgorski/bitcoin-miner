@@ -1,6 +1,5 @@
 mod exampletile;
 mod systems;
-//mod game_data;
 mod states;
 mod move_button_on_click;
 
@@ -16,7 +15,6 @@ use amethyst::{
         RenderingBundle,
         RenderFlat2D,
         RenderDebugLines,
-        //debug_drawing::DebugLinesComponent,
     },
     utils::{application_root_dir, fps_counter::FpsCounterBundle},
     ui::{RenderUi, UiBundle},
@@ -47,7 +45,6 @@ fn main() -> amethyst::Result<()> {
         .with(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
         .with(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
         .with(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
-        //.with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?

@@ -7,11 +7,8 @@ use amethyst::{
     winit::VirtualKeyCode,
     TransEvent,
 };
-//use crate::game_data::CustomGameData;
-use crate::states::MainMenuState;
 
-/// Adapted, originally from amethyst/evoli src/states/pause_menu.rs
-// ID's for buttons in the prefab. Required to identify them.
+use crate::states::MainMenuState;
 
 const BUTTON_RESUME_ID: &str = "resume";
 const BUTTON_SAVE_ID: &str = "save_game";
@@ -21,8 +18,7 @@ const BUTTON_EXIT_ID: &str = "exit";
 
 #[derive(Default)]
 pub struct PauseMenuState {
-    // button entities are created in on_start() and destroyed in on_stop()
-    button_resume: Option<Entity>,
+        button_resume: Option<Entity>,
     button_save: Option<Entity>,
     button_options: Option<Entity>,
     button_exit_to_main_menu: Option<Entity>,
@@ -30,10 +26,6 @@ pub struct PauseMenuState {
     root: Option<Entity>,
 }
 
-// load the pause_menu.ron prefab then instantiate it
-// if the "resume" button is clicked, goto MainGameState
-// if the "exit_to_main_menu" button is clicked, remove the pause and main game states and go to MenuState.
-// if the "exit" button is clicked, quit the program.
 impl<'a> SimpleState for PauseMenuState {
     fn on_start(&mut self, data: StateData<GameData>) {
         let world = data.world;
@@ -43,8 +35,7 @@ impl<'a> SimpleState for PauseMenuState {
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
-        //data.data.update(&data.world, false);
-        // once deferred creation of the root ui entity finishes, look up buttons
+
         if self.button_resume.is_none()
             || self.button_exit_to_main_menu.is_none()
             || self.button_exit.is_none()

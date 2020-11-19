@@ -13,7 +13,7 @@ use amethyst::{
     window::ScreenDimensions,
     assets::{AssetStorage, Loader, Handle},
     renderer::{
-        camera::{ Camera, ActiveCamera},
+        camera::{ Camera},
         debug_drawing::DebugLinesComponent,
         formats::texture::ImageFormat,
         sprite::{ SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
@@ -43,11 +43,7 @@ pub struct Chunk {
     pub x:i32,
     pub y:i32,
 }
-impl Map {
-    fn replace(map: Map) -> Map {
-        map
-    }
-}
+
 impl Chunk {
     fn new(tiles: TileMap::<ExampleTile, MortonEncoder>, x: i32, y: i32) -> Chunk {
         Chunk {

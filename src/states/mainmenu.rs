@@ -10,8 +10,6 @@ use amethyst::{
 };
 use crate::states::GameState;
 
-//use crate::game_data::CustomGameData;
-
 pub const BUTTON_NEW_ID: &str = "new game";
 pub const BUTTON_LOAD_ID: &str = "load game";
 pub const BUTTON_OPTIONS_ID: &str = "options";
