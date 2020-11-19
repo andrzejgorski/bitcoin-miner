@@ -3,9 +3,10 @@ mod gamestate;
 mod exampletile;
 mod pause;
 mod systems;
-
+mod game_data;
+use crate::mainmenu::MainMenuState;
 use crate::exampletile::ExampleTile;
-
+use crate::game_data::CustomGameDataBuilder;
 use amethyst::{
     core::{TransformBundle},
     prelude::*,
@@ -37,17 +38,19 @@ fn main() -> amethyst::Result<()> {
     let input_bundle = InputBundle::<StringBindings>::new()
         .with_bindings_from_file(binding_path)?;
 
-    let game_data = GameDataBuilder::default()
-        .with_bundle(TransformBundle::new())?
-        .with_bundle(input_bundle)?
-        .with_bundle(UiBundle::<StringBindings>::new())?
-        .with_bundle(HotReloadBundle::default())?
-        .with_bundle(FpsCounterBundle)?
-        .with(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
-        .with(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
-        .with(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
+    let mut app_builder = Application::build(assets_dir, MainMenuState::default())?;
+    let game_data = CustomGameDataBuilder::default()
+        .with_base_bundle(&mut app_builder.world, TransformBundle::new())?
+        .with_base_bundle(&mut app_builder.world, input_bundle)?
+        .with_base_bundle(&mut app_builder.world, UiBundle::<StringBindings>::new())?
+        .with_base_bundle(&mut app_builder.world, HotReloadBundle::default())?
+        .with_base_bundle(&mut app_builder.world, FpsCounterBundle)?
+        //.with_running(systems::MapMovementSystem::default(), "MapMovementSystem", &["input_system"])
+        //.with_running(systems::CameraSwitchSystem::default(), "camera_switch", &["input_system"])
+        //.with_running(systems::CameraMovementSystem::default(), "movement", &["camera_switch"])
         //.with_system_desc(crate::systems::MainMenuUiEventHandlerSystemDesc::default(),"ui_event_handler", &[])
-        .with_bundle(
+        .with_base_bundle(
+            &mut app_builder.world, 
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
@@ -60,12 +63,7 @@ fn main() -> amethyst::Result<()> {
         )?;
 
     
-    //*************** Do Debugowania Stanów odpalamy odrazu grę**********************
-    //use crate::gamestate::GameState;
-    //let mut game = Application::build(assets_dir, GameState::default())?.build(game_data)?;
-
-    use crate::mainmenu::MainMenuState;
-    let mut game = Application::build(assets_dir, MainMenuState::default())?.build(game_data)?;
+    let mut game = app_builder.build(game_data)?;
 
     game.run();
 

@@ -1,8 +1,10 @@
 use crate::pause::PauseMenuState;
 use crate::exampletile::ExampleTile;
 
+use crate::game_data::CustomGameData;
+
 use amethyst::{
-    core::{Time,math::{Vector3},Parent},
+    core::{Time,math::{Vector3}},
     ecs::prelude::{Entity, WorldExt},
     input::{is_close_requested, is_key_down},
     prelude::*,
@@ -44,8 +46,8 @@ pub struct GameState {
     //sprite_sheet_handle: Option<Handle<SpriteSheet>>,
 }
 
-impl SimpleState for GameState {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+impl <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for GameState {
+    fn on_start(&mut self, data: StateData<CustomGameData>) {
         
         //let StateData { mut world, .. } = data;
         let world = data.world;
@@ -75,17 +77,11 @@ impl SimpleState for GameState {
             .named("camera")
             .build();
 
-        
-
-        log::info!("World Created");
-
         let map = TileMap::<ExampleTile, MortonEncoder>::new(
-            Vector3::new(48, 48, 1),
-            Vector3::new(20, 20, 1),
+            Vector3::new(32, 32, 1),
+            Vector3::new(32, 32, 1),
             Some(a_sprite_sheet_handle)
         );
-
-        log::info!("map defined");
 
         let _map_entity = world
             .create_entity()
@@ -96,23 +92,21 @@ impl SimpleState for GameState {
         let _camera = world
             .create_entity()
             .with(Transform::from(Vector3::new(0.0, 0.0, 1.1)),)
-            .with(Parent{entity: _map_entity})
             .with(Camera::standard_2d(width, height),)
             .named("camera")
             .build();
 
-        log::info!("map created");
     }
 
-    fn on_pause(&mut self, _data: StateData<'_, GameData<'_, '_>>) {
+    fn on_pause(&mut self, data: StateData<CustomGameData>) {
         self.paused = true;
     }
 
-    fn on_resume(&mut self, _data: StateData<'_, GameData<'_, '_>>) {
+    fn on_resume(&mut self, data: StateData<CustomGameData>) {
         self.paused = false;
     }
 
-    fn on_stop(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+    fn on_stop(&mut self, data: StateData<CustomGameData>) {
         if let Some(root_entity) = self.ui_root {
             data.world
                 //.delete_all()
@@ -127,9 +121,9 @@ impl SimpleState for GameState {
 
     fn handle_event(
         &mut self,
-        _: StateData<'_, GameData<'_, '_>>,
+        data: StateData<CustomGameData>,
         event: StateEvent,
-    ) -> SimpleTrans {
+    ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         match &event {
             StateEvent::Window(event) => {
                 if is_close_requested(&event) {
@@ -157,8 +151,8 @@ impl SimpleState for GameState {
     }
 
 
-    fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
-        let StateData { world, .. } = state_data;
+    fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent>  {
+        let StateData { world, .. } = data;
         
         // this cannot happen in 'on_start', as the entity might not be fully
         // initialized/registered/created yet.

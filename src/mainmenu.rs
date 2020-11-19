@@ -10,7 +10,7 @@ use amethyst::{
 };
 
 use crate::gamestate::GameState;
-
+use crate::game_data::CustomGameData;
 pub const BUTTON_NEW: &str = "new game";
 pub const BUTTON_LOAD: &str = "load game";
 pub const BUTTON_OPTIONS: &str = "options";
@@ -25,16 +25,16 @@ pub struct MainMenuState {
     button_quit: Option<Entity>,
 }
 
-impl SimpleState for MainMenuState {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+impl  <'a, 'b> State<CustomGameData<'a, 'b>, StateEvent> for MainMenuState {
+    fn on_start(&mut self, data: StateData<CustomGameData>) {
         log::info!("Start Stanu Menu");
         self.ui_root =
                 Some(data.world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     }
 
-    fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+    fn update(&mut self, data: StateData<CustomGameData>) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         // only search for buttons if they have not been found yet
-        let StateData { world, .. } = state_data;
+        let StateData { world, .. } = data;
         if self.button_new.is_none() || self.button_load.is_none() ||
             self.button_options.is_none() || self.button_options.is_none()
         {
@@ -54,9 +54,9 @@ impl SimpleState for MainMenuState {
 
     fn handle_event(
         &mut self,
-        _: StateData<'_, GameData<'_, '_>>,
+        data: StateData<CustomGameData>,
         event: StateEvent,
-    ) -> SimpleTrans {
+    ) -> Trans<CustomGameData<'a, 'b>, StateEvent> {
         match event {
             StateEvent::Window(event) => {
                 if is_close_requested(&event) {
@@ -89,7 +89,7 @@ impl SimpleState for MainMenuState {
             _ => Trans::None,
         }
     }
-    fn on_stop(&mut self, data: StateData<GameData>) {
+    fn on_stop(&mut self, data: StateData<CustomGameData>) {
         // after destroying the current UI, invalidate references as well (makes things cleaner)
         if let Some(root_entity) = self.ui_root {
             data.world
