@@ -3,7 +3,6 @@ use amethyst::{
         math::Vector3,
         Transform,
     },
-    derive::SystemDesc,
     ecs::{
         Entities, Join, Read, ReadStorage,
         System, WriteStorage,
@@ -11,6 +10,8 @@ use amethyst::{
     input::{InputHandler, StringBindings},
     renderer::camera::{ActiveCamera, Camera},
 };
+
+
 
 #[derive(Default)]
 pub struct CameraMovementSystem;
@@ -44,6 +45,7 @@ impl<'s> System<'s> for CameraMovementSystem {
                 let scale = camera_transform.scale();
                 let scale = Vector3::new(scale.x + z_scale, scale.y + z_scale, scale.z + z_scale);
                 camera_transform.set_scale(scale);
+
             }
         }
     }

@@ -3,7 +3,7 @@ use crate::exampletile::ExampleTile;
 
 use amethyst::{
     core::{Time,math::Vector3,Transform},
-    ecs::prelude::{Entity, WorldExt},
+    ecs::prelude::{Entity, WorldExt, Component, DenseVecStorage},
     input::{is_close_requested, is_key_down},
     prelude::*,
     ui::{UiCreator, UiFinder, UiText},
@@ -11,9 +11,9 @@ use amethyst::{
     winit::VirtualKeyCode,
     tiles::{MortonEncoder, TileMap},
     window::ScreenDimensions,
-    assets::{AssetStorage, Loader},
+    assets::{AssetStorage, Loader, Handle},
     renderer::{
-        camera::{ Camera},
+        camera::{ Camera, ActiveCamera},
         debug_drawing::DebugLinesComponent,
         formats::texture::ImageFormat,
         sprite::{ SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
@@ -26,14 +26,85 @@ pub struct GameState {
     paused: bool,
     ui_root: Option<Entity>,
     fps_display: Option<Entity>,
+    map: Map,
 }
+
+pub const CHUNK_SIZE: u32 = 32;
+pub const TEXTURE_SIZE: u32 = 32;
+
+#[derive(Default)]
+pub struct Map {
+    pub chunks: Vec<Chunk>,
+    
+}
+
+pub struct Chunk {
+    pub tiles: TileMap::<ExampleTile, MortonEncoder>,
+    pub x:i32,
+    pub y:i32,
+}
+impl Map {
+    fn replace(map: Map) -> Map {
+        map
+    }
+}
+impl Chunk {
+    fn new(tiles: TileMap::<ExampleTile, MortonEncoder>, x: i32, y: i32) -> Chunk {
+        Chunk {
+            tiles: tiles,
+            x: x,
+            y: y,
+        }
+    }
+}
+
+impl Component for Map {
+    type Storage = DenseVecStorage<Self>;
+}
+impl Component for Chunk {
+    type Storage = DenseVecStorage<Self>;
+}
+fn init_new_tiles(handle: Handle<SpriteSheet>) -> TileMap::<ExampleTile, MortonEncoder> {
+    let new_tiles = TileMap::<ExampleTile, MortonEncoder>::new(
+        Vector3::new(CHUNK_SIZE, CHUNK_SIZE, 1),
+        Vector3::new(TEXTURE_SIZE, TEXTURE_SIZE, 1),
+        Some(handle)
+    );
+    return new_tiles;
+}
+
+fn new_chunk(x:i32,y:i32, tiles: TileMap::<ExampleTile, MortonEncoder>, world: &mut World){
+    {
+        let chunk = Chunk::new(tiles.clone(), 0, 0);
+        //let world_clone = world.clone();
+        let map = world.try_fetch_mut::<Map>();
+        
+        if let Some(mut fetched_map) = map {
+
+        fetched_map.chunks.push(chunk);
+
+        } else {
+        println!("No Map present in `World`");
+        }
+    }
+    {
+        let _map_entity = world
+                .create_entity()
+                .named(format!("Chunk_{:?}_{:?}", x, y))
+                .with(tiles)
+                .with(Transform::from(Vector3::new((x*1024) as f32, (y*1024) as f32, 0.)),)
+                .build();
+    }
+}
+//fn init_new_Chunk(tiles: TileMap::<ExampleTile, MortonEncoder>, x:i32, y:i32 ) -> Chunk {
+//
+//}
 
 impl SimpleState for GameState {
 
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
 
         let world = data.world;
-
         // needed for registering audio output.
         //init_output(&mut world);
 
@@ -46,7 +117,7 @@ impl SimpleState for GameState {
             Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/example.ron", ())));
 
         let sprite_sheet_handle = load_sprite_sheet(world, "texture/nature_tileset.png", "texture/nature_tileset.ron");
-
+        //self.sprite_sheet_handle = Some(sprite_sheet_handle);
         let (width, height) = {
             let dim = world.read_resource::<ScreenDimensions>();
             (dim.width(), dim.height())
@@ -59,17 +130,12 @@ impl SimpleState for GameState {
             .named("camera")
             .build();
 
-        let map = TileMap::<ExampleTile, MortonEncoder>::new(
-            Vector3::new(32, 32, 1),
-            Vector3::new(32, 32, 1),
-            Some(sprite_sheet_handle)
-        );
+        self.map = Map::default();
+        let tiles = init_new_tiles(sprite_sheet_handle);
 
-        let _map_entity = world
-            .create_entity()
-            .with(map)
-            .with(Transform::default())
-            .build();
+        new_chunk(0,0, tiles.clone(), world);
+        new_chunk(1,0, tiles.clone(), world);
+        new_chunk(2,0, tiles.clone(), world);
 
         let _camera = world
             .create_entity()
