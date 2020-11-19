@@ -81,8 +81,8 @@ impl<'a> SimpleState for PauseMenuState {
 
                     log::info!("[Trans::Pop] Closing Pause Menu!");
                     log::info!("[Trans::Switch] Switching to MainMenu!");
-
-                    Trans::None // we could also not add the pop to the channel and Pop here
+                    
+                    Trans::None// we could also not add the pop to the channel and Pop here
                                 // but like this the execution order is guaranteed (in the next versions)
                 } else if Some(target) == self.exit_button {
                     Trans::Quit

@@ -3,6 +3,7 @@
 Container(
     transform: (
         id: "background",
+        z: -1,
         anchor: Middle,
         stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
         width: 20.,
@@ -16,7 +17,7 @@ Container(
                 y: 90,
                 width: 500.,
                 height: 50.,
-                tab_order: 2,
+                tab_order: 0,
                 anchor: Middle,
             ),
             text: (
@@ -34,7 +35,7 @@ Container(
                 height: 45.,
                 anchor: Middle,
             ),
-            background: SolidColor(0.0, 0.0, 0.0, 1.0),
+            background: SolidColor(0.0, 0.0, 0.0, 0.0),
             children: [
 
                 Button(
@@ -69,7 +70,7 @@ Container(
                 height: 45.,
                 anchor: Middle,
             ),
-            background: SolidColor(0.00, 0.00, 0.00, 1.0),
+            background: SolidColor(0.00, 0.00, 0.00, 0.0),
             children: [
 
                 // Complex Button
@@ -78,7 +79,7 @@ Container(
                         id: "load game",
                         width: 300.,
                         height: 40.,
-                        tab_order: 3,
+                        tab_order: 2,
                         anchor: Middle,
                         mouse_reactive: true,
                     ),
@@ -96,7 +97,74 @@ Container(
             ]
         ),
 
+        Container(
+            transform: (
+                id: "container_quit",
+                y: -135,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.00, 0.00, 0.00, 0.0),
+            children: [
 
+                // Complex Button
+                Button(
+                    transform: (
+                        id: "quit",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 4,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "quit",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
+                        press_text_color: (1.0, 0.0, 0.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
+        Container(
+            transform: (
+                id: "container_test",
+                y: -195,
+                width: 300.,
+                height: 45.,
+                anchor: Middle,
+            ),
+            background: SolidColor(0.00, 0.00, 0.00, 0.0),
+            children: [
+
+                // Complex Button
+                Button(
+                    transform: (
+                        id: "test",
+                        width: 300.,
+                        height: 40.,
+                        tab_order: 5,
+                        anchor: Middle,
+                        mouse_reactive: true,
+                    ),
+                    button: (
+                        text: "test",
+                        font: File("font/square.ttf", ("TTF", ())),
+                        font_size: 30.,
+                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
+                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
+                        press_text_color: (1.0, 1.0, 1.0, 1.0),
+                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
+                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
+                    )
+                ),
+            ]
+        ),
         Container(
             transform: (
                 id: "container_options",
@@ -105,7 +173,7 @@ Container(
                 height: 45.,
                 anchor: Middle,
             ),
-            background: SolidColor(0.00, 0.00, 0.00, 1.0),
+            background: SolidColor(0.00, 0.00, 0.00, 0.0),
             children: [
 
                 // Complex Button
@@ -131,42 +199,6 @@ Container(
                 ),
             ]
         ),
-
-
-        Container(
-            transform: (
-                id: "container_quit",
-                y: -135,
-                width: 300.,
-                height: 45.,
-                anchor: Middle,
-            ),
-            background: SolidColor(0.00, 0.00, 0.00, 1.0),
-            children: [
-
-                // Complex Button
-                Button(
-                    transform: (
-                        id: "quit",
-                        width: 300.,
-                        height: 40.,
-                        tab_order: 3,
-                        anchor: Middle,
-                        mouse_reactive: true,
-                    ),
-                    button: (
-                        text: "quit",
-                        font: File("font/square.ttf", ("TTF", ())),
-                        font_size: 30.,
-                        normal_text_color: (0.5, 0.0, 0.0, 1.0), // ffa500
-                        hover_text_color: (0.8, 0.0, 0.0, 1.0),
-                        press_text_color: (1.0, 0.0, 0.0, 1.0),
-                        normal_image: SolidColor(0.0, 0.0, 0.0, 0.),
-                        press_image: SolidColor(0.01, 0.01, 0.01, 1.),
-                    )
-                ),
-            ]
-        ),
-
+        
     ],
 )

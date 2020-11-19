@@ -1,13 +1,13 @@
 #![enable(implicit_some)]
 Container(
     transform: (
-        id: "background",
+        id: "game_ui_background",
         anchor: Middle,
         stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
         width: 20.,
         height: 20.,
     ),
-    background: SolidColor(0.01, 0.01, 0.01, 1),
+    background: SolidColor(0.01, 0.01, 0.01, 0.0),
     children: [
         Label(
             transform: (
@@ -23,8 +23,8 @@ Container(
             text: (
                 text: "N/A",
                 font: File("font/square.ttf", ("TTF", ())),
-                font_size: 10.,
-                color: (0.2, 0.2, 0.2, 1.0),
+                font_size: 20.,
+                color: (1.0, 1.0, 0.2, 1.0),
             )
         ),
 
