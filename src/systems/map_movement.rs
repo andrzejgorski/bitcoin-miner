@@ -7,8 +7,7 @@ use amethyst::{
     input::{InputHandler, StringBindings},
     tiles::{MortonEncoder, TileMap},
 };
-
-use crate::exampletile::ExampleTile;
+use crate::map_structure::*;
 
 
 pub struct MapMovementSystem {

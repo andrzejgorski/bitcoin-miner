@@ -1,9 +1,9 @@
-mod exampletile;
+mod map_structure;
 mod systems;
 mod states;
 mod move_button_on_click;
 
-use crate::exampletile::ExampleTile;
+use crate::map_structure::ExampleTile;
 use crate::states::MainMenuState;
 
 use amethyst::{
