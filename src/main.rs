@@ -2,6 +2,7 @@ mod map_structure;
 mod systems;
 mod states;
 mod move_button_on_click;
+mod chunked_map;
 
 use crate::map_structure::ExampleTile;
 use crate::states::MainMenuState;

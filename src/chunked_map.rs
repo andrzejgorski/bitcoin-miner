@@ -16,19 +16,19 @@ pub struct BTCMTile {
     terrain: Terrain,
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub struct ChunkCoordinates {
     x: i32,
     y: i32,
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub struct TileMapCoordinates {
     x: i32,
     y: i32,
 }
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub struct TileChunkCoordinates {
     x: usize,
     y: usize,
@@ -52,7 +52,7 @@ pub struct Chunk <T: Default> {
 }
 
 
-impl <T: Default> Chunk <T> {
+impl <T: Default + Copy> Chunk <T> {
     fn new(coordinates: ChunkCoordinates) -> Self {
         let tiles = [[T::default(); CHUNK_SIZE]; CHUNK_SIZE];
         Chunk {
@@ -61,8 +61,8 @@ impl <T: Default> Chunk <T> {
         }
     }
 
-    fn get_tile(self, coordinates: TileChunkCoordinates) -> T {
-        self.tiles[coordinates.x][coordinates.y]
+    fn  get_tile<'a, 'b> (self: &'a mut Self, coordinates: &'b TileChunkCoordinates) -> &'a mut T {
+        &mut self.tiles[coordinates.x][coordinates.y]
     }
 }
 
@@ -71,7 +71,7 @@ pub struct ChunkedMap <T: Default> {
     seed: i32,
 }
 
-impl <T: Default> ChunkedMap <T> {
+impl <T: Default + Copy> ChunkedMap <T> {
 
     pub fn new(seed: i32) -> Self {
         ChunkedMap {
@@ -80,9 +80,9 @@ impl <T: Default> ChunkedMap <T> {
         }
     }
 
-    pub fn get_tile(&mut self, coordinates: TileMapCoordinates) -> T {
+    pub fn get_tile(&mut self, coordinates: &TileMapCoordinates) -> &mut T {
         let (chunkCoordinates, tileCoordinates) = coordinates.div();
-        self.get_chunk(chunkCoordinates).get_tile(tileCoordinates)
+        self.get_chunk(chunkCoordinates).get_tile(&tileCoordinates)
     }
 
     pub fn get_chunk(&mut self, coordinates: ChunkCoordinates) -> &mut Chunk<T> {
