@@ -64,9 +64,7 @@ impl SimpleState for GameState {
         let sprite_sheet_handle =  Some(load_sprite_sheet(world, "texture/nature_tileset.png", "texture/nature_tileset.ron"));
 
         let mut map = Map::new(sprite_sheet_handle, 0);
-        map.generate_new_chunk(0,0);
-        map.generate_new_chunk(1,0);
-        map.generate_new_chunk(2,0);
+
         map.create_chunk_entity(0, 0, world);
         map.create_chunk_entity(1, 0, world);
         map.create_chunk_entity(2, 0, world);
