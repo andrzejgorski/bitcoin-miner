@@ -103,9 +103,3 @@ impl Map {
 impl Component for Map {
     type Storage = DenseVecStorage<Self>;
 }
-
-
-
-
-
-
